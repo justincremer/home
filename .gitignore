@@ -11,14 +11,14 @@
 .gitconfig
 .gnupg
 .icons
-.java/	
+/.java	
 .keychain
 .kite
 .lesshst
 .local
 .mozilla
 .minecraft
-.mputils/*
+/.mputils
 .npm
 .pki
 .rustup
