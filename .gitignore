@@ -18,6 +18,7 @@
 .local
 .mozilla
 .minecraft
+.mputils/*
 .npm
 .pki
 .rustup
