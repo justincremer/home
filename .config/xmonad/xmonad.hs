@@ -57,7 +57,7 @@ _keys conf@(XConfig {XMonad.modMask = modm}) =
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf),
       ((modm .|. shiftMask, xK_p), spawn "dmenu_run"),
       ((modm .|. shiftMask, xK_w), spawn "brave"),
-      ((modm .|. shiftMask, xK_e), spawn "emacs"),
+      ((modm .|. shiftMask, xK_e), spawn "emacsclient -c"),
       ((modm .|. shiftMask, xK_r), spawn "code"),
       ((modm .|. shiftMask, xK_s), spawn "spotify"),
       ((modm .|. shiftMask, xK_d), spawn "discord"),
