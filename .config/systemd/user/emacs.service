@@ -9,4 +9,4 @@ Environment=SSH_AUTH_SOCK=%t/keyring/sh
 Restart=on-failure
 
 [Install]
-WantedBy=graphical.target
+WantedBy=default.target
