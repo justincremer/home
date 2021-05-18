@@ -1,10 +1,13 @@
-[[ "$(tty)" = "/dev/tty1" ]] && pgrep xmonad || startx "~/.xinitrc"
+export PATH=$PATH:~/.bin
+export PATH=$PATH:~/.local/bin
+export PATH=$PATH:~/.yarn/bin
 
-# [[ -d ~/.bin ]] && PATH=~/.bin:$PATH
-# [[ -d ~/.local/bin ]] && PATH=~/.local/bin:$PATH
-# [[ -d ~/go/bin ]] && PATH=~/go/bin:$PATH
-# [[ -d ~/.cargo ]] && . ~/.cargo/env
-# [[ -d ~/.yarn/bin ]] && PATH=~/.yarn/bin:$PATH
+export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:~/go/bin
+export GOROOT=/usr/local/go            
+export GOPATH=~/go
 
+[[ -f ~/.cargo ]] && . ~/.cargo/env 
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
+[[ "$(tty)" = "/dev/tty1" ]] && pgrep xmonad || startx "~/.xinitrc" 

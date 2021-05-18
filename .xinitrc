@@ -11,3 +11,4 @@ xrandr --output DP-3 --mode 1920x1080 --rotate left --pos 0x0 \
        --output DP-2 --mode 1920x1080 --rotate left --pos 3000x0 &
 
 exec xmonad
+# exec wingo

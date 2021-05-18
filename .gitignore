@@ -11,7 +11,7 @@
 .gitconfig
 .gnupg
 .icons
-/.java	
+.java/*	
 .keychain
 .kite
 .lesshst
@@ -36,7 +36,7 @@
 .zshrc
 
 development/
-downloads/
+Downloads/
 documents/
 go/
 isos/
