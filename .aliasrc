@@ -124,7 +124,7 @@ alias gpg-check="gpg2 --keyserver-options auto-key-retrieve --verify"
 alias gpg-retrieve="gpg2 --keyserver-options auto-key-retrieve --receive-keys"
 
 alias nf="neofetch"
-alias gt="gotop"
+alias yt="ytop -f -p -I 2 -c vice"
 
 # Extract various compression schemes
 ex ()

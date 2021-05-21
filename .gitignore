@@ -1,8 +1,10 @@
-.Xauthority
 *hist*
 *hsts*
+
 .bin
 .cache
+.cabal
+!.cabal/config
 .cargo
 .dmrc
 .expo
@@ -16,9 +18,10 @@
 .kite
 .lesshst
 .local
+.mh_profile
 .mozilla
 .minecraft
-/.mputils
+.mputils
 .npm
 .pki
 .rustup
@@ -28,6 +31,7 @@
 .vscode
 .vscode-react-native/*
 .vuerc
+.Xauthority
 .yarn
 .yarnrc
 .z
@@ -40,11 +44,11 @@ Downloads/
 documents/
 go/
 isos/
+pictures/screen-shots
+Mail/
 quicklisp/
+repos/
 scripts/
-
-.emacs.d/*
-!.emacs.d/init.el
 
 .config/BraveSoftware/
 .config/Code/

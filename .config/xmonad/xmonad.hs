@@ -1,35 +1,37 @@
 -- Imports ----------------------------------------
 
-import Data.Array
-import qualified Data.Map as M
-import Data.Monoid
-import Data.String
-import Graphics.X11.ExtraTypes.XF86
-import System.Exit
-import System.IO
-import XMonad
-import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.ManageHelpers
-import XMonad.Hooks.SetWMName
-import XMonad.Layout.Fullscreen
-import XMonad.Layout.Gaps
-import XMonad.Layout.NoBorders
-import qualified XMonad.StackSet as W
-import XMonad.Util.Run (spawnPipe)
-import XMonad.Util.SpawnOnce
-import XMonad.Util.Themes
+import           Data.Array
+import qualified Data.Map                     as M
+import           Data.Monoid
+import           Data.String
+import           Graphics.X11.ExtraTypes.XF86
+import           System.Exit
+import           System.IO
+import           XMonad
+import           XMonad.Hooks.DynamicLog
+import           XMonad.Hooks.ManageDocks
+import           XMonad.Hooks.ManageHelpers
+import           XMonad.Hooks.SetWMName
+import           XMonad.Layout.Fullscreen
+import           XMonad.Layout.Gaps
+import           XMonad.Layout.NoBorders
+import qualified XMonad.StackSet              as W
+import           XMonad.Util.Run              (spawnPipe)
+import           XMonad.Util.SpawnOnce
+import           XMonad.Util.Themes
 
 -- Constants --------------------------------------
 
 _modMask = mod4Mask
 
 _terminal :: String
-_terminal = "urxvt"
+-- _terminal = "urxvt"
+_terminal = "alacritty"
 
 _xmobar :: String
 _xmobar = "~/.config/xmonad/xmobar.hs"
 
+_workspaces :: [String]
 _workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 _focusFollowsMouse :: Bool

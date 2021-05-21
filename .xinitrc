@@ -3,8 +3,11 @@
 xset +fp /usr/share/fonts/local
 font paths
 
+# Bad hack to set default cursor
+xsetroot -cursor_name left_ptr
+
 nitrogen --restore &
-compton --config ~/.config/compton.conf -b &
+picom --config ~/.config/compton.conf -b &
 dunst &
 xrandr --output DP-3 --mode 1920x1080 --rotate left --pos 0x0 \
        --output DP-1 --mode 1920x1080 --primary --pos 1080x650 \
