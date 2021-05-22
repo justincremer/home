@@ -18,10 +18,6 @@ alias lh='exa -lh --git'
 alias lla='exa -la --git'
 alias lah='exa -lah --git'
 
-alias cat='bat'
-alias find='fd'
-alias top='gt'
-
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
@@ -125,6 +121,7 @@ alias gpg-retrieve="gpg2 --keyserver-options auto-key-retrieve --receive-keys"
 
 alias nf="neofetch"
 alias yt="ytop -f -p -I 2 -c vice"
+alias xrecomp="xmonad --recompile"
 
 # Extract various compression schemes
 ex ()

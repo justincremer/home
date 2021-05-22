@@ -1,2 +1,2 @@
-*/5 * * * * * echo 'hello world'
-*/5 * * * * * notify-send 'hello world'
+0 * * * * * echo 'hello world'
+* * * * * * notify-send 'hello world'

@@ -1,24 +1,24 @@
 -- Imports ----------------------------------------
 
-import           Data.Array
-import qualified Data.Map                     as M
-import           Data.Monoid
-import           Data.String
-import           Graphics.X11.ExtraTypes.XF86
-import           System.Exit
-import           System.IO
-import           XMonad
-import           XMonad.Hooks.DynamicLog
-import           XMonad.Hooks.ManageDocks
-import           XMonad.Hooks.ManageHelpers
-import           XMonad.Hooks.SetWMName
-import           XMonad.Layout.Fullscreen
-import           XMonad.Layout.Gaps
-import           XMonad.Layout.NoBorders
-import qualified XMonad.StackSet              as W
-import           XMonad.Util.Run              (spawnPipe)
-import           XMonad.Util.SpawnOnce
-import           XMonad.Util.Themes
+import Data.Array
+import qualified Data.Map as M
+import Data.Monoid
+import Data.String
+import Graphics.X11.ExtraTypes.XF86
+import System.Exit
+import System.IO
+import XMonad
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.SetWMName
+import XMonad.Layout.Fullscreen
+import XMonad.Layout.Gaps
+import XMonad.Layout.NoBorders
+import qualified XMonad.StackSet as W
+import XMonad.Util.Run (spawnPipe)
+import XMonad.Util.SpawnOnce
+import XMonad.Util.Themes
 
 -- Constants --------------------------------------
 
@@ -54,22 +54,19 @@ _xmobarCurrentWorkspaceColor = "CEFFAC"
 
 -- Keybindings ------------------------------------
 
-_keys conf@(XConfig {XMonad.modMask = modm}) =
+_keys conf@XConfig {XMonad.modMask = modm} =
   M.fromList $
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf),
       ((modm .|. shiftMask, xK_p), spawn "dmenu_run"),
       ((modm .|. shiftMask, xK_w), spawn "brave"),
-      -- ((modm .|. shiftMask, xK_e), spawn "emacsclient -c"),
       ((modm .|. shiftMask, xK_e), spawn "emacs"),
       ((modm .|. shiftMask, xK_r), spawn "code"),
       ((modm .|. shiftMask, xK_s), spawn "spotify"),
       ((modm .|. shiftMask, xK_d), spawn "discord"),
       -- Cycle layout
       ((modm, xK_space), sendMessage NextLayout),
-      -- Reset layout
-      ((modm .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf),
-      -- Window
-      -- Kill
+      -- Default layout
+      ((modm .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf),       
       ((modm .|. shiftMask, xK_c), kill),
       ((modm, xK_n), refresh),
       -- Move
@@ -94,7 +91,9 @@ _keys conf@(XConfig {XMonad.modMask = modm}) =
       -- Restart xmonad
       ((modm, xK_z), spawn "xmonad --recompile && xmonad --restart"),
       -- Quit xmonad
-      ((modm .|. shiftMask, xK_z), io (exitWith ExitSuccess))
+      ((modm .|. shiftMask, xK_z),
+       -- io (exitWith ExitSuccess))
+              io exitSuccess)
     ]
       ++
       -- mod-shift-{u, i, o}, Move client to screen L, M, or R
@@ -132,27 +131,27 @@ _mouse XConfig {XMonad.modMask = modm} =
 
 -- Layouts ----------------------------------------
 
+-- defaultGaps :: [(, Int)]
 defaultGaps = [(U, 15), (D, 15), (R, 15), (L, 15)]
 
-noGaps = [(U, 0), (D, 0), (R, 0), (L, 0)]
+-- noGaps = [(U, 0), (D, 0), (R, 0), (L, 0)]
 
 _layout =
   avoidStruts $
-    gaps
-      defaultGaps
-      ( tiled
-          ||| Mirror tiled
-          ||| noBorders Full
-      )
-      ||| tiled
-      ||| Mirror tiled
-      ||| noBorders Full
+    noBorders $
+      gaps
+        defaultGaps
+        ( tiled
+            ||| Mirror tiled
+            ||| Full
+        )
+        ||| Full
   where
     tiled = Tall nmaster delta ratio
     nmaster = 1
     ratio = 1 / 2
     delta = 3 / 100
-    theme = darkTheme
+    theme = darkTheme 
 
 _borderWidth = 2
 
@@ -163,7 +162,7 @@ _manageHook =
     [ manageDocks,
       className =? "Vlc" --> doFullFloat,
       className =? "gmrun" --> doFullFloat,
-      isFullscreen --> doFullFloat
+      isFullscreen --> (doF W.focusDown <+> doFullFloat)
     ]
 
 _eventHook = mempty
