@@ -1,38 +1,41 @@
--- Imports ----------------------------------------
+import XMonad
+import qualified XMonad.StackSet as W
+import System.IO
+import System.Exit
+-- import Graphics.X11.ExtraTypes.XF86
 
 import Data.Array
-import qualified Data.Map as M
 import Data.Monoid
 import Data.String
-import Graphics.X11.ExtraTypes.XF86
-import System.Exit
-import System.IO
-import XMonad
+import qualified Data.Map as M
+import Data.Maybe (isJust, fromJust)
+
+import XMonad.Layout.Fullscreen
+import XMonad.Layout.Gaps ( gaps, Gaps )
+import XMonad.Layout.NoBorders
+import XMonad.Layout.Decoration (ModifiedLayout)
+
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
-import XMonad.Layout.Fullscreen
-import XMonad.Layout.Gaps
-import XMonad.Layout.NoBorders
-import qualified XMonad.StackSet as W
+
 import XMonad.Util.Run (spawnPipe)
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Themes
 
--- Constants --------------------------------------
-
+_modMask :: KeyMask
 _modMask = mod4Mask
 
 _terminal :: String
--- _terminal = "urxvt"
 _terminal = "alacritty"
 
 _xmobar :: String
 _xmobar = "~/.config/xmonad/xmobar.hs"
 
 _workspaces :: [String]
-_workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+-- _workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+_workspaces = [" main ", " dev ", " www ", " misc "]
 
 _focusFollowsMouse :: Bool
 _focusFollowsMouse = True
@@ -52,8 +55,13 @@ _xmobarTitleColor = "FFB6B0"
 _xmobarCurrentWorkspaceColor :: String
 _xmobarCurrentWorkspaceColor = "CEFFAC"
 
--- Keybindings ------------------------------------
+_defaultGaps :: [(Direction2D, Int)]
+_defaultGaps = [(U, 15), (D, 15), (R, 15), (L, 15)]
 
+_borderWidth :: Dimension
+_borderWidth = 2
+
+_keys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 _keys conf@XConfig {XMonad.modMask = modm} =
   M.fromList $
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf),
@@ -63,10 +71,8 @@ _keys conf@XConfig {XMonad.modMask = modm} =
       ((modm .|. shiftMask, xK_r), spawn "code"),
       ((modm .|. shiftMask, xK_s), spawn "spotify"),
       ((modm .|. shiftMask, xK_d), spawn "discord"),
-      -- Cycle layout
-      ((modm, xK_space), sendMessage NextLayout),
-      -- Default layout
-      ((modm .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf),       
+      ((modm, xK_space), sendMessage NextLayout), -- Cycle layout
+      ((modm .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf), -- Default layotu
       ((modm .|. shiftMask, xK_c), kill),
       ((modm, xK_n), refresh),
       -- Move
@@ -88,12 +94,8 @@ _keys conf@XConfig {XMonad.modMask = modm} =
       -- Number in the master area
       ((modm, xK_comma), sendMessage (IncMasterN 1)),
       ((modm, xK_period), sendMessage (IncMasterN (-1))),
-      -- Restart xmonad
-      ((modm, xK_z), spawn "xmonad --recompile && xmonad --restart"),
-      -- Quit xmonad
-      ((modm .|. shiftMask, xK_z),
-       -- io (exitWith ExitSuccess))
-              io exitSuccess)
+      ((modm, xK_z), spawn "xmonad --recompile && xmonad --restart"), -- Restart
+      ((modm .|. shiftMask, xK_z), io exitSuccess) -- Exit
     ]
       ++
       -- mod-shift-{u, i, o}, Move client to screen L, M, or R
@@ -101,16 +103,8 @@ _keys conf@XConfig {XMonad.modMask = modm} =
         | (key, sc) <- zip [xK_i, xK_o, xK_u] [0 ..],
           (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
       ]
-      ++
-      -- mod-[1..9], Switch to workspace N
-      -- mod-shift-[1..9], Move client to workspace N
-      [ ((m .|. modm, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9],
-          (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
-      ]
 
--- ++
-
+_mouse :: XConfig l -> M.Map (KeyMask, Button) (Window -> X ())
 _mouse XConfig {XMonad.modMask = modm} =
   M.fromList
     -- mod-button1, Set the window to floating mode and move by dragging
@@ -129,18 +123,26 @@ _mouse XConfig {XMonad.modMask = modm} =
       )
     ]
 
--- Layouts ----------------------------------------
+_manageHook :: ManageHook
+_manageHook =
+  composeAll
+    [ manageDocks,
+      className =? "Vlc" --> doFullFloat,
+      className =? "gmrun" --> doFullFloat,
+      isFullscreen --> (doF W.focusDown <+> doFullFloat)
+    ]
 
--- defaultGaps :: [(, Int)]
-defaultGaps = [(U, 15), (D, 15), (R, 15), (L, 15)]
+_eventHook :: Event -> X All
+_eventHook = mempty
 
--- noGaps = [(U, 0), (D, 0), (R, 0), (L, 0)]
+_startupHook :: X ()
+_startupHook = mempty
 
-_layout =
+_layoutHook =
   avoidStruts $
     noBorders $
       gaps
-        defaultGaps
+        _defaultGaps
         ( tiled
             ||| Mirror tiled
             ||| Full
@@ -151,46 +153,21 @@ _layout =
     nmaster = 1
     ratio = 1 / 2
     delta = 3 / 100
-    theme = darkTheme 
+    theme = darkTheme
 
-_borderWidth = 2
-
--- Hooks -----------------------------------------
-
-_manageHook =
-  composeAll
-    [ manageDocks,
-      className =? "Vlc" --> doFullFloat,
-      className =? "gmrun" --> doFullFloat,
-      isFullscreen --> (doF W.focusDown <+> doFullFloat)
-    ]
-
-_eventHook = mempty
-
+_logHook :: X ()
 _logHook = return ()
 
-_startupHook = mempty
-
--- Main ------------------------------------------
-
-main = do
-  xmproc <- spawnPipe ("xmobar " ++ _xmobar)
-  xmonad $
-    docks
-      defaults
-        { logHook =
-            dynamicLogWithPP $
-              xmobarPP
-                { ppOutput = hPutStrLn xmproc,
-                  ppTitle = xmobarColor _xmobarTitleColor "" . shorten 100,
-                  ppCurrent = xmobarColor _xmobarCurrentWorkspaceColor "",
-                  ppSep = "   "
-                },
-          manageHook = manageDocks <+> _manageHook,
-          startupHook = _startupHook,
-          handleEventHook = docksEventHook
-        }
-
+defaults ::
+  XConfig (ModifiedLayout
+        AvoidStruts
+        ( ModifiedLayout
+            WithBorder
+            ( Choose
+                (ModifiedLayout Gaps (Choose Tall (Choose (Mirror Tall) Full)))
+                Full
+            )
+        ))
 defaults =
   def
     { terminal = _terminal,
@@ -203,9 +180,28 @@ defaults =
       focusedBorderColor = _focusedBorderColor,
       keys = _keys,
       mouseBindings = _mouse,
-      layoutHook = _layout,
+      layoutHook = _layoutHook,
       manageHook = _manageHook,
       handleEventHook = _eventHook,
       logHook = _logHook,
       startupHook = _startupHook
     }
+
+main :: IO ()
+main = do
+  xmproc <- spawnPipe ("xmobar " ++ _xmobar)
+  xmonad $
+    docks
+      defaults
+        { manageHook = manageDocks <+> _manageHook,
+          startupHook = _startupHook,
+          handleEventHook = docksEventHook,
+          logHook =
+            dynamicLogWithPP $
+              xmobarPP
+                { ppOutput = hPutStrLn xmproc,
+                  ppTitle = xmobarColor _xmobarTitleColor "" . shorten 100,
+                  ppCurrent = xmobarColor _xmobarCurrentWorkspaceColor "",
+                  ppSep = "   "
+                }
+        }

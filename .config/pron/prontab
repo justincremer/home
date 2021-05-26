@@ -1,2 +1,2 @@
-0 * * * * * echo 'hello world'
-* * * * * * notify-send 'hello world'
+* * * * * * echo 'hello world'
+0 0 0 1 1 0 echo 'goodbye world'
