@@ -1,12 +1,11 @@
-# Color prompt
-autoload -U colors && colors
-PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
-
 # History
 HISTFILE=~/.zsh_hist
 HISTSIZE=1000
 SAVEHIST=1000
 CASE_SENSITIVE="false"
+
+# Color prompt
+autoload -U colors && colors
 
 # Autocompletion
 autoload -Uz compinit

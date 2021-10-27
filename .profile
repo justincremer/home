@@ -4,16 +4,17 @@ export PATH=$PATH:~/.yarn/bin
 export PATH=$PATH:~/.cargo/bin
 export PATH=$PATH:/usr/local/go/bin
 export PATH=$PATH:~/go/bin
+export PATH=$PATH:/home/xiuxiu/.local/share/solana/install/active_release/bin
 
 export GOROOT=/usr/local/go            
 export GOPATH=~/go
 
 . ~/.cargo/env 
 
-export EDITOR=emacs
+export EDITOR=nvim
 
-sudo mount /dev/sdb1 /mnt/drive-b &
+if [[ "$(tty)" = "/dev/tty1" ]]; then
+    pgrep xmonad || startx "~/.xinitrc" 
+fi
 
-xetroot -cursor_name left_ptr &
-
-[[ "$(tty)" = "/dev/tty1" ]] && pgrep xmonad || startx "~/.xinitrc" 
+export PATH="/home/xiuxiu/.local/share/solana/install/active_release/bin:$PATH"
