@@ -1,20 +1,21 @@
-export PATH=$PATH:~/.bin
-export PATH=$PATH:~/.local/bin
-export PATH=$PATH:~/.yarn/bin
-export PATH=$PATH:~/.cargo/bin
-export PATH=$PATH:/usr/local/go/bin
-export PATH=$PATH:~/go/bin
-export PATH=$PATH:/home/xiuxiu/.local/share/solana/install/active_release/bin
+# if running bash, include .bashrc if it exists
+[ -n "$BASH_VERSION" ] && \
+    [ -f "$HOME/.bashrc" ] && \
+        . "$HOME/.bashrc"
 
-export GOROOT=/usr/local/go            
-export GOPATH=~/go
+# set PATH so it includes user's private bin if it exists
+[ -d "$HOME/bin" ] && PATH="$PATH:$HOME/bin"
 
-. ~/.cargo/env 
+# set PATH so it includes user's private bin if it exists
+[ -d "$HOME/.local/bin" ] && PATH="$PATH:$HOME/.local/bin:"
 
-export EDITOR=nvim
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-if [[ "$(tty)" = "/dev/tty1" ]]; then
-    pgrep xmonad || startx "~/.xinitrc" 
-fi
+# yarn
+[ -d "$HOME/.yarn/bin" ] && PATH="$PATH:$HOME/.yarn/bin"
 
-export PATH="/home/xiuxiu/.local/share/solana/install/active_release/bin:$PATH"
+# rust
+. "$HOME/.cargo/env"
